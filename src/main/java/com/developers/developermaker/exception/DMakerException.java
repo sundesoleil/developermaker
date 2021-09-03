@@ -8,13 +8,13 @@ public class DMakerException extends RuntimeException{
     private String detailMessage;
 
     public DMakerException(DMakerErrorCode errorCode) {
-        super(errorCode.getMessage());
+        super(errorCode.getMessage()); // 기본 메시지
         this.dMakerErrorCode = errorCode;
         this.detailMessage = errorCode.getMessage();
     }
 
     public DMakerException(DMakerErrorCode errorCode, String detailMessage) {
-        super(errorCode.getMessage());
+        super(detailMessage);
         this.dMakerErrorCode = errorCode;
         this.detailMessage = detailMessage;
     }
