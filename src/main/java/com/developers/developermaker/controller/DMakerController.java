@@ -33,10 +33,10 @@ public class DMakerController {
     @PostMapping("/create-developer")
     public List<String> createDevelopers(
             @Valid @RequestBody CreateDeveloper.Request request
-            ) {
+            ) { // 요청값 받아오기
         log.info("request : {}", request);
 
-        dMakerService.createDeveloper(request);
+        dMakerService.createDeveloper(request);// 요청값 넘기기
 
         return Collections.singletonList("Olaf"); // 단일 객체 리스트
     }

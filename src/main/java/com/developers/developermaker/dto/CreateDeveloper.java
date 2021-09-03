@@ -42,7 +42,7 @@ public class CreateDeveloper {
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class Response {
+    public static class Response { // 개발자 생성에 대한 응답
         private DeveloperLevel developerLevel;
         private DeveloperSkillType developerSkillType;
         private Integer experienceYears;
