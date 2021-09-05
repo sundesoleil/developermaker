@@ -1,5 +1,6 @@
 package com.developers.developermaker.dto;
 
+import com.developers.developermaker.entity.Developer;
 import com.developers.developermaker.type.DeveloperLevel;
 import com.developers.developermaker.type.DeveloperSkillType;
 import lombok.*;
@@ -47,5 +48,17 @@ public class CreateDeveloper {
         private DeveloperSkillType developerSkillType;
         private Integer experienceYears;
         private String memberId;
+
+        // responseDto를 만들때는 주로 우리가 Developer를 생성한 직후에 바로 DeveloperEntity를 통해 만들어주는
+        // 거라서 developerEntity와 상당히 강한 결합을 하게 된다. 이럴 때는 fromEntity를 사용해서
+        // developerEntity를 받아서 바로 response를 만들어주는 static method를 생성한다.
+       public static Response fromEntity(Developer developer) {
+            return Response.builder()
+                    .developerLevel(developer.getDeveloperLevel())
+                    .developerSkillType(developer.getDeveloperSkillType())
+                    .experienceYears(developer.getExperienceYears())
+                    .memberId(developer.getMemberId())
+                    .build();
+        }
     }
 }
