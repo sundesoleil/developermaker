@@ -4,6 +4,7 @@ import com.developers.developermaker.dto.CreateDeveloper;
 import com.developers.developermaker.service.DMakerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.catalina.valves.CrawlerSessionManagerValve;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,13 +32,11 @@ public class DMakerController {
     }
 
     @PostMapping("/create-developer")
-    public List<String> createDevelopers(
+    public CreateDeveloper.Response createDevelopers( // 응답을 CreateDeveloper.Response로 변경
             @Valid @RequestBody CreateDeveloper.Request request
             ) { // 요청값 받아오기
         log.info("request : {}", request);
 
-        dMakerService.createDeveloper(request);// 요청값 넘기기
-
-        return Collections.singletonList("Olaf"); // 단일 객체 리스트
+        return dMakerService.createDeveloper(request);
     }
 }

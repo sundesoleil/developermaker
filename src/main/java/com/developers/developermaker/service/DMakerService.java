@@ -20,19 +20,20 @@ public class DMakerService {
     private final DeveloperRepository developerRepository;
 
     @Transactional
-    public void createDeveloper(CreateDeveloper.Request request) {
+    public CreateDeveloper.Response createDeveloper(CreateDeveloper.Request request) {
         validationCreateDeveloperRequest(request);
 
         Developer developer = Developer.builder() // Developer Entity를 builder를 통해 각각의 데이터 세팅
-                .developerLevel(DeveloperLevel.JUNIOR)
-                .developerSkillType(DeveloperSkillType.BACK_END)
-                .experienceYears(2)
-                .name("Olaf")
-                .age(35)
+                .developerLevel(request.getDeveloperLevel())
+                .developerSkillType(request.getDeveloperSkillType())
+                .experienceYears(request.getExperienceYears())
+                .name(request.getName())
+                .age(request.getAge())
                 .build();
 
         developerRepository.save(developer); // 빌드 완료한 디벨로퍼를 레퍼지토리에 세이브함으로써 영속화(저장)
-        }
+        return CreateDeveloper.Response.fromEntity(developer);
+    }
 
     private void validationCreateDeveloperRequest(CreateDeveloper.Request request) {
         // business validation
