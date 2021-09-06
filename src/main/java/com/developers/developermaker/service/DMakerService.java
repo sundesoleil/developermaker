@@ -1,6 +1,8 @@
 package com.developers.developermaker.service;
 
 import com.developers.developermaker.dto.CreateDeveloper;
+import com.developers.developermaker.dto.DeveloperDetailDto;
+import com.developers.developermaker.dto.DeveloperDto;
 import com.developers.developermaker.entity.Developer;
 import com.developers.developermaker.exception.DMakerErrorCode;
 import com.developers.developermaker.exception.DMakerException;
@@ -11,6 +13,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.developers.developermaker.exception.DMakerErrorCode.*;
 
@@ -27,6 +32,7 @@ public class DMakerService {
                 .developerLevel(request.getDeveloperLevel())
                 .developerSkillType(request.getDeveloperSkillType())
                 .experienceYears(request.getExperienceYears())
+                .memberId(request.getMemberId())
                 .name(request.getName())
                 .age(request.getAge())
                 .build();
@@ -56,5 +62,18 @@ public class DMakerService {
                .ifPresent((developer -> {
                    throw new DMakerException(DUPLICATED_MEMBER_ID);
                }));
+    }
+
+    public List<DeveloperDto> getAllDevelopers() {
+        return developerRepository.findAll()
+                .stream().map(DeveloperDto::fromEntity) // Developer를 DeveloperDto로 바꾸는 매핑
+                .collect(Collectors.toList());
+    }
+
+    public DeveloperDetailDto getDeveloperDetail(String memberId) {
+        return developerRepository.findByMemberId(memberId)
+                .map(DeveloperDetailDto::fromEntity)
+                .orElseThrow(()->new DMakerException(NO_DEVELOPER));
+
     }
 }
