@@ -7,12 +7,9 @@ import com.developers.developermaker.dto.UpdateDeveloper;
 import com.developers.developermaker.service.DMakerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.catalina.valves.CrawlerSessionManagerValve;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 
@@ -28,7 +25,7 @@ public class DMakerController {
         // GET /developers HTTP/1.1
         log.info("GET /developers HTTP/1.1");
 
-        return dMakerService.getAllDevelopers();
+        return dMakerService.getEmployedDevelopers();
     }
 
     @GetMapping("/developer/{memberId}")
@@ -55,5 +52,12 @@ public class DMakerController {
             @Valid @RequestBody UpdateDeveloper.Request request
     ) {
         return dMakerService.updateDeveloper(memberId, request);
+    }
+
+    @DeleteMapping("/developer/{memberId}")
+    public DeveloperDetailDto deleteDeveloper (
+        @PathVariable String memberId
+        ) {
+        return dMakerService.deleteDeveloper(memberId);
     }
 }

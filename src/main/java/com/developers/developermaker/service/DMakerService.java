@@ -1,12 +1,15 @@
 package com.developers.developermaker.service;
 
+import com.developers.developermaker.code.StatusCode;
 import com.developers.developermaker.dto.CreateDeveloper;
 import com.developers.developermaker.dto.DeveloperDetailDto;
 import com.developers.developermaker.dto.DeveloperDto;
 import com.developers.developermaker.dto.UpdateDeveloper;
 import com.developers.developermaker.entity.Developer;
+import com.developers.developermaker.entity.RetiredDeveloper;
 import com.developers.developermaker.exception.DMakerException;
 import com.developers.developermaker.repository.DeveloperRepository;
+import com.developers.developermaker.repository.RetiredDeveloperRepository;
 import com.developers.developermaker.type.DeveloperLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,6 +25,7 @@ import static com.developers.developermaker.exception.DMakerErrorCode.*;
 @RequiredArgsConstructor
 public class DMakerService {
     private final DeveloperRepository developerRepository;
+    private final RetiredDeveloperRepository retiredDeveloperRepository;
 
     @Transactional
     public CreateDeveloper.Response createDeveloper(CreateDeveloper.Request request) {
@@ -32,6 +36,7 @@ public class DMakerService {
                 .developerSkillType(request.getDeveloperSkillType())
                 .experienceYears(request.getExperienceYears())
                 .memberId(request.getMemberId())
+                .statusCode(StatusCode.EMPLOYED)
                 .name(request.getName())
                 .age(request.getAge())
                 .build();
@@ -52,8 +57,8 @@ public class DMakerService {
                }));
     }
 
-    public List<DeveloperDto> getAllDevelopers() {
-        return developerRepository.findAll()
+    public List<DeveloperDto> getEmployedDevelopers() {
+        return developerRepository.findDevelopersByStatusCodeEquals(StatusCode.EMPLOYED)
                 .stream().map(DeveloperDto::fromEntity) // Developer를 DeveloperDto로 바꾸는 매핑
                 .collect(Collectors.toList());
     }
@@ -103,4 +108,23 @@ public class DMakerService {
             throw new DMakerException(LEVEL_EXPERIENCE_YEARS_NOT_MATCHED);
         }
     }
+
+    @Transactional
+    public DeveloperDetailDto deleteDeveloper(String memberId) {
+        // 1. EMPLOYED -> RETIRED
+        // 삭제할 Developer 정보를 가져오면서 간단한 exception 체크 함께 수행
+        Developer developer = developerRepository.findByMemberId(memberId)
+                .orElseThrow(() -> new DMakerException(NO_DEVELOPER));
+        // 디벨로퍼 상태 변경
+        developer.setStatusCode(StatusCode.RETIRED);
+
+        // 2. save into RetiredDeveloper4
+        RetiredDeveloper retiredDeveloper = RetiredDeveloper.builder()
+                .memberId(developer.getMemberId())
+                .name(developer.getName())
+                .build();
+        retiredDeveloperRepository.save(retiredDeveloper);
+        return DeveloperDetailDto.fromEntity(developer);
+    }
+
 }
