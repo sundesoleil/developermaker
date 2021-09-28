@@ -55,6 +55,7 @@ public class DMakerService {
                .ifPresent((developer -> {
                    throw new DMakerException(DUPLICATED_MEMBER_ID);
                }));
+
     }
 
     public List<DeveloperDto> getEmployedDevelopers() {
