@@ -30,7 +30,7 @@ public class DMakerController {
 
     @GetMapping("/developer/{memberId}")
     public DeveloperDetailDto getDeveloperDetail(
-            @PathVariable String memberId
+            @PathVariable final String memberId
     ) {
         log.info("GET /developers HTTP/1.1");
 
@@ -39,7 +39,7 @@ public class DMakerController {
 
     @PostMapping("/create-developer")
     public CreateDeveloper.Response createDevelopers( // 응답을 CreateDeveloper.Response로 변경
-            @Valid @RequestBody CreateDeveloper.Request request
+            @Valid @RequestBody final CreateDeveloper.Request request
             ) { // 요청값 받아오기
         log.info("request : {}", request);
 
@@ -48,15 +48,15 @@ public class DMakerController {
 
     @PutMapping("/developer/{memberId}")
     public DeveloperDetailDto updateDeveloper(
-            @PathVariable String memberId,
-            @Valid @RequestBody UpdateDeveloper.Request request
+            @PathVariable final String memberId,
+            @Valid @RequestBody final UpdateDeveloper.Request request
     ) {
         return dMakerService.updateDeveloper(memberId, request);
     }
 
     @DeleteMapping("/developer/{memberId}")
     public DeveloperDetailDto deleteDeveloper (
-        @PathVariable String memberId
+        @PathVariable final String memberId
         ) {
         return dMakerService.deleteDeveloper(memberId);
     }
