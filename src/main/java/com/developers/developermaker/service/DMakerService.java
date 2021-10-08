@@ -75,10 +75,12 @@ public class DMakerService {
 
     @Transactional(readOnly = true)
     public DeveloperDetailDto getDeveloperDetail(String memberId) {
-        return developerRepository.findByMemberId(memberId)
-                .map(DeveloperDetailDto::fromEntity)
-                .orElseThrow(()->new DMakerException(NO_DEVELOPER));
+        return DeveloperDetailDto.fromEntity(getDeveloperByMemberId(memberId));
+    }
 
+    private Developer getDeveloperByMemberId(String memberId) {
+        return developerRepository.findByMemberId(memberId)
+                .orElseThrow(() -> new DMakerException(NO_DEVELOPER));
     }
 
     @Transactional
@@ -90,8 +92,7 @@ public class DMakerService {
                 request.getExperienceYears()
         );
 
-        Developer developer = developerRepository.findByMemberId(memberId)
-                .orElseThrow(()-> new DMakerException(NO_DEVELOPER));
+        Developer developer = getDeveloperByMemberId(memberId);
 
         developer.setDeveloperLevel(request.getDeveloperLevel());
         developer.setDeveloperSkillType(request.getDeveloperSkillType());
