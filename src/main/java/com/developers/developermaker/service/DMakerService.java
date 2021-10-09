@@ -92,13 +92,19 @@ public class DMakerService {
                 request.getExperienceYears()
         );
 
-        Developer developer = getDeveloperByMemberId(memberId);
+        return DeveloperDetailDto.fromEntity(
+                getUpdatedDeveloperFromRequest(
+                        request, getDeveloperByMemberId(memberId)
+                )
+        );
+    }
 
+    private Developer getUpdatedDeveloperFromRequest(UpdateDeveloper.Request request, Developer developer) {
         developer.setDeveloperLevel(request.getDeveloperLevel());
         developer.setDeveloperSkillType(request.getDeveloperSkillType());
         developer.setExperienceYears(request.getExperienceYears());
 
-        return DeveloperDetailDto.fromEntity(developer);
+        return developer;
     }
 
 
