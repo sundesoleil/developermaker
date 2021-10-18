@@ -28,6 +28,9 @@ import static com.developers.developermaker.exception.DMakerErrorCode.*;
 @Service
 @RequiredArgsConstructor
 public class DMakerService {
+    public static final DeveloperLevel SENIOR = DeveloperLevel.SENIOR;
+    public static final DeveloperLevel JUNGNIOR = DeveloperLevel.JUNGNIOR;
+    public static final DeveloperLevel JUNIOR = DeveloperLevel.JUNIOR;
     private final DeveloperRepository developerRepository;
     private final RetiredDeveloperRepository retiredDeveloperRepository;
 
@@ -110,16 +113,12 @@ public class DMakerService {
     }
 
 
-    private void validateDeveloperLevel(DeveloperLevel developerLevel, Integer experienceYears) {
-        if (developerLevel == DeveloperLevel.SENIOR
-                && experienceYears < MIN_SENIOR_EXPERIENCE_YEARS) {
-            throw new DMakerException(LEVEL_EXPERIENCE_YEARS_NOT_MATCHED);
-        }
-        if (developerLevel == DeveloperLevel.JUNGNIOR
-                && experienceYears < MAX_JUNIOR_EXPERIENCE_YEARS || experienceYears > MIN_SENIOR_EXPERIENCE_YEARS) {
-            throw new DMakerException(LEVEL_EXPERIENCE_YEARS_NOT_MATCHED);
-        }
-        if (developerLevel == DeveloperLevel.JUNIOR && experienceYears > MAX_JUNIOR_EXPERIENCE_YEARS) {
+    private void validateDeveloperLevel(
+            DeveloperLevel developerLevel, Integer experienceYears
+    ) {
+        if(experienceYears < developerLevel.getMinExperienceYears() ||
+                experienceYears > developerLevel.getMaxExperienceYears()
+        ) {
             throw new DMakerException(LEVEL_EXPERIENCE_YEARS_NOT_MATCHED);
         }
     }
