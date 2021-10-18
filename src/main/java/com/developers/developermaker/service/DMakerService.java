@@ -58,9 +58,10 @@ public class DMakerService {
     }
 
 
-    private void validateCreateDeveloperRequest(@NonNull CreateDeveloper.Request request) {
-        validateDeveloperLevel(
-                request.getDeveloperLevel(),
+    private void validateCreateDeveloperRequest(
+            @NonNull CreateDeveloper.Request request
+    ) {
+        request.getDeveloperLevel().validateExperienceYears(
                 request.getExperienceYears()
         );
 
@@ -92,8 +93,7 @@ public class DMakerService {
     public DeveloperDetailDto updateDeveloper(
             String memberId, UpdateDeveloper.Request request
     ) {
-        validateDeveloperLevel(
-                request.getDeveloperLevel(),
+        request.getDeveloperLevel().validateExperienceYears(
                 request.getExperienceYears()
         );
 
@@ -110,17 +110,6 @@ public class DMakerService {
         developer.setExperienceYears(request.getExperienceYears());
 
         return developer;
-    }
-
-
-    private void validateDeveloperLevel(
-            DeveloperLevel developerLevel, Integer experienceYears
-    ) {
-        if(experienceYears < developerLevel.getMinExperienceYears() ||
-                experienceYears > developerLevel.getMaxExperienceYears()
-        ) {
-            throw new DMakerException(LEVEL_EXPERIENCE_YEARS_NOT_MATCHED);
-        }
     }
 
     @Transactional
